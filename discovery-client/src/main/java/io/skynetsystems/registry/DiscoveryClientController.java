@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,14 +19,14 @@ public class DiscoveryClientController {
     @Autowired
     private RestTemplate rest;
 
-        @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String hello(@RequestParam(value="salutation", defaultValue="Hello") String salutation, @RequestParam(value="name", defaultValue="") String name) {
-        return getHealthStatus(salutation, name);
+     @RequestMapping(value = "/health", method = RequestMethod.GET)
+    public String hello() {
+        return getHealthStatus();
     }
 
     @HystrixCommand(fallbackMethod = "getFallbackMessage")
-    private String getHealthStatus(String salutation, String name) {
-        URI uri = UriComponentsBuilder.fromUriString("//discovery-service/health" )
+    private String getHealthStatus() {
+        URI uri = UriComponentsBuilder.fromUriString("//discovery-service/health")
                 .build()
                 .toUri();
         return rest.getForObject(uri, String.class);
