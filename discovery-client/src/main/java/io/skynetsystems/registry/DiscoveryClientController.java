@@ -22,11 +22,11 @@ public class DiscoveryClientController {
 
         @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello(@RequestParam(value="salutation", defaultValue="Hello") String salutation, @RequestParam(value="name", defaultValue="") String name) {
-        return getGreeting(salutation, name);
+        return getHealthStatus(salutation, name);
     }
 
-    @HystrixCommand(fallbackMethod = "getFallbackGreeting")
-    private String getGreeting(String salutation, String name) {
+    @HystrixCommand(fallbackMethod = "getFallbackMessage")
+    private String getHealthStatus(String salutation, String name) {
         URI uri = UriComponentsBuilder.fromUriString("//discovery-service/health" )
                 .build()
                 .toUri();
@@ -34,7 +34,7 @@ public class DiscoveryClientController {
     }
 
     @SuppressWarnings("unused")
-	private String getFallbackGreeting() {
+	private String getFallbackMessage() {
         return "Oops, the service is not currently available";
     }
 }
